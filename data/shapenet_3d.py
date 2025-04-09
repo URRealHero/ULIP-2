@@ -43,8 +43,15 @@ class PointCloudDataset(data.Dataset):
         """Load point cloud from a .ply file."""
         verts, _ = pytorch3d.io.load_ply(ply_f)
         assert isinstance(verts, torch.Tensor) and verts.shape[1] == 3, "The point cloud should be 3D"
-        verts = verts.to(self.device)
-        return verts
+        # Add default RGB values (zeros)
+        rgb = torch.zeros_like(verts)
+        point_cloud = torch.cat([verts, rgb], dim=1)
+        
+        # Verify final dimensions and move to device
+        assert point_cloud.shape[1] == 6, \
+            f"Expected 6 channels (XYZ+RGB), got {point_cloud.shape[1]}"
+            
+        return point_cloud.to(self.device)
 
 def custom_collate_fn(batch):
     """Collate function to combine point clouds, model IDs, and categories into a batch."""
