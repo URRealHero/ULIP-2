@@ -21,7 +21,9 @@ def parse_args():
     parser.add_argument('--validate_dataset_prompt', default='modelnet40_64', type=str)
     parser.add_argument('--npoints', default=8192, type=int, help='number of points used for pre-train and test.')
     parser.add_argument('--use_height', action='store_true', help='whether to use height information, by default enabled with PointNeXt.')
+    parser.add_argument("--n_gpu", type=int, default=8, help="number of gpus")
     return parser.parse_args()
+
 
 def load_model(args):
     """Load the ULIP-2 model from a checkpoint"""
